@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { FacilitiesService } from './facilities.service';
 import { Facilities } from 'src/@entities/facilities.entity';
@@ -32,6 +32,33 @@ export class FacilitiesController {
         } catch (error) {
             console.error(error);
             throw new BadRequestException({ message: 'Error creating Facilities' });
+        }
+    }
+
+    @Put(':id/updateFacilities')
+    @ApiBadRequestResponse({ description: 'Error updating owner' })
+    async updateTenantById(
+        @Param('id', ParseIntPipe) id: number,
+        @Body() updateFacilitiesDto: CreateFacilitiesDto
+        ){
+        try {
+            await this.facilitiesService.updateFacilities(id, updateFacilitiesDto)
+            return{ message: 'Facilities successfully updated' };
+        } catch (error) {
+            throw new BadRequestException({ message: 'Error updating Facilities' });
+        }
+    }
+
+    @Delete(':id/deleteFacilities')
+    @ApiOkResponse({ description: 'Facilities successfully deleted' })
+    @ApiBadRequestResponse({ description: 'Error deleting facilities' })
+    async deleteTenantById(@Param('id', ParseIntPipe) id: number) {
+        try {
+        await this.facilitiesService.deleteFacilities(id);
+        return { message: 'Facilities successfully deleted' };
+        } catch (error) {
+        console.log(error)
+        throw new BadRequestException({ message: 'Error deleting facilities' });
         }
     }
 

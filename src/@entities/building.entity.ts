@@ -16,7 +16,7 @@ export class Building {
     @Column()
     construction_date: Date;
 
-    @OneToMany(() => Apartment, apartment => apartment.building)
+    @OneToMany(() => Apartment, apartment => apartment.building, { cascade: true })
     apartments: Apartment[];
 
     @OneToMany(() => BuildingFacilities, buildingFacilities => buildingFacilities.building)

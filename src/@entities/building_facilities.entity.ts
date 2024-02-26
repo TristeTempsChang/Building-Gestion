@@ -13,6 +13,6 @@ export class BuildingFacilities {
     @ManyToOne(() => Building, (building) => building.buildingFacilities)
     building: Building
 
-    @ManyToOne(() => Facilities, (facilities) => facilities.buildingFacilities)
+    @ManyToOne(() => Facilities, (facilities) => facilities.buildingFacilities, { onDelete: 'SET NULL' })
     facilities: Facilities
 }

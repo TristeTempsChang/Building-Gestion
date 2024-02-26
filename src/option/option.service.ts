@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Option } from 'src/@entities/option.entity';
 import { CreateOptionParams } from 'src/utils/types';
@@ -10,7 +10,7 @@ export class OptionService {
   constructor(@InjectRepository(Option) private optionRepository: Repository<Option>) {}
 
   findOptions() {
-    return this.optionRepository.find({relations: ['apartment']});
+    return this.optionRepository.find();
   }
 
   async createOptions(optionDetails: CreateOptionParams) {
@@ -21,6 +21,24 @@ export class OptionService {
     const option = await this.optionRepository.save(newOption);
 
     return option;
+  }
+
+  async updateOptios(id: number, optionDetails: CreateOptionParams) {
+
+    const update = await this.optionRepository.update(
+      { id }, 
+      { ...optionDetails
+    });
+    
+    return update
+  }
+
+  async deleteOption(id: number) {
+    const result = await this.optionRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Options with ID ${id} not found`);
+    }
+    return { message: 'Options successfully deleted' };
   }
 
 }

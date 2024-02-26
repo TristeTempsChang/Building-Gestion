@@ -19,13 +19,14 @@ export class Apartment {
     @Column()
     door_number: number;
 
-    @ManyToOne(() => Apartment_type, type => type.apartment)
+    @ApiProperty({ example: "Type id you want to associate with this apartment"})
+    @ManyToOne(() => Apartment_type, type => type.apartment, { onDelete: 'SET NULL' })
     type: Apartment_type
     
-    @ManyToOne(() => Building, building => building.apartments)
+    @ManyToOne(() => Building, building => building.apartments, { onDelete: 'CASCADE' })
     building: Building;
 
-    @ManyToOne(() => Owner, owner => owner.apartments)
+    @ManyToOne(() => Owner, owner => owner.apartments, { onDelete: 'SET NULL' })
     owner: Owner;
 
     @ManyToMany(() => Option, (option) => option.apartment)
@@ -33,5 +34,5 @@ export class Apartment {
     options: Option[];
 
     @OneToMany(() => Tenant, tenant => tenant.apartment)
-    tenant: Tenant;
+    tenant: Tenant[];
 }

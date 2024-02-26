@@ -27,4 +27,5 @@ export type CreateFacilitiesParams = {
 export type CreateApartmentParams = {
   floor: number;
   door_number: number;
+  typeId: number;
 }

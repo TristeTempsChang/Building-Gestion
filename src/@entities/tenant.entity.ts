@@ -11,6 +11,6 @@ export class Tenant {
     @Column()
     name: string;
 
-    @ManyToOne(() => Apartment, apartment => apartment.tenant)
+    @ManyToOne(() => Apartment, apartment => apartment.tenant, { onDelete: 'SET NULL' })
     apartment: Apartment;
 }

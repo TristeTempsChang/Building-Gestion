@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { TypeService } from './type.service';
 import { Apartment_type } from 'src/@entities/type_apartment.entity';
@@ -33,5 +33,33 @@ export class TypeController {
           console.error(error);
           throw new BadRequestException({ message: 'Error creating apartment type' });
       }
+  }
+
+  //For updating type profile (replace with patch if yu want to update partially type, put update all the repository)
+  @Put(':id/updateType')
+  @ApiBadRequestResponse({ description: 'Error updating type' })
+  async updateTypeById(
+      @Param('id', ParseIntPipe) id: number,
+      @Body() updateTypeDto: CreateTypeDto
+      ){
+      try {
+        await this.typeService.updateType(id, updateTypeDto)
+        return{ message: 'Type successfully updated' };
+      } catch (error) {
+          throw new BadRequestException({ message: 'Error updating type' });
+      }
+  }
+
+  @Delete(':id/deleteType')
+  @ApiOkResponse({ description: 'Type successfully deleted' })
+  @ApiBadRequestResponse({ description: 'Error deleting type' })
+  async deleteTypeById(@Param('id', ParseIntPipe) id: number) {
+    try {
+      await this.typeService.deleteType(id);
+      return { message: 'Type successfully deleted' };
+    } catch (error) {
+      console.log(error)
+      throw new BadRequestException({ message: 'Error deleting type' });
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Tenant } from 'src/@entities/tenant.entity';
 import { CreateOptionParams } from 'src/utils/types';
@@ -22,6 +22,24 @@ export class TenantService {
     const tenant = await this.tenantRepository.save(newTenant);
 
     return tenant;
+  }
+
+  async updateTenant(id: number, tenantDetails: CreateOptionParams) {
+
+    const update = await this.tenantRepository.update(
+      { id }, 
+      { ...tenantDetails
+    });
+
+    return update
+  }
+
+  async deleteTenant(id: number) {
+    const result = await this.tenantRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Tenant with ID ${id} not found`);
+    }
+    return { message: 'Tenant successfully deleted' };
   }
 
 }

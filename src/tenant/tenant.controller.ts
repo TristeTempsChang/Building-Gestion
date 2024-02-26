@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { TenantService } from './tenant.service';
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Tenant } from 'src/@entities/tenant.entity';
@@ -33,5 +33,32 @@ export class TenantController {
           console.error(error);
           throw new BadRequestException({ message: 'Error creating building' });
       }
+  }
+
+  @Put(':id/updateTenant')
+  @ApiBadRequestResponse({ description: 'Error updating tenant' })
+  async updateTenantById(
+      @Param('id', ParseIntPipe) id: number,
+      @Body() updateTenantDto: CreateOptionDto
+      ){
+      try {
+        await this.tenantService.updateTenant(id, updateTenantDto)
+        return{ message: 'Tenant successfully updated' };
+      } catch (error) {
+          throw new BadRequestException({ message: 'Error updating tenant' });
+      }
+  }
+
+  @Delete(':id/deleteTenant')
+  @ApiOkResponse({ description: 'Tenant successfully deleted' })
+  @ApiBadRequestResponse({ description: 'Error deleting tenant' })
+  async deleteTenantById(@Param('id', ParseIntPipe) id: number) {
+    try {
+      await this.tenantService.deleteTenant(id);
+      return { message: 'Tenant successfully deleted' };
+    } catch (error) {
+      console.log(error)
+      throw new BadRequestException({ message: 'Error deleting tenant' });
+    }
   }
 }

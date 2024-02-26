@@ -7,4 +7,7 @@ export class CreateApartmentDto {
 
   @ApiProperty()
   door_number: number;
+
+  @ApiProperty({example: "ID of the type"})
+  typeId: number;
 }
