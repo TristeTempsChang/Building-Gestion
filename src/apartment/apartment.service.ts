@@ -113,10 +113,11 @@ export class ApartmentService {
   }
 
   async updateApartment(id: number, updateApartmentDetails: CreateApartmentParams) {
+    const { typeId, ...rest } = updateApartmentDetails;
     const update = await this.apartmentRepository.update(
         { id }, 
-        { ...updateApartmentDetails
-    });
+        { ...rest, type: typeId ? { id: typeId } : null }
+    );
     
     return update
   }
