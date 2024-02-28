@@ -5,6 +5,6 @@ export class AssignOptionDto {
   @ApiProperty({example: "Ids of existing apartment"})
   apartmentId: number;
 
-  @ApiProperty({example: "Ids of existing option (check exemple below)"})
+  @ApiProperty({example: "Ids of existing option (check exemple below and dont forget to add [])"})
   optionIds: number[];
 }
