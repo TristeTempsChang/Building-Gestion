@@ -56,7 +56,7 @@ export class BuildingService {
   }
 
   async assignFacilities(buildingId: number, assignFacilitiesDto: AssignFacilitiesDto) {
-    const { facilitiesId, lastInspection } = assignFacilitiesDto;
+    const { facilitiesId } = assignFacilitiesDto;
 
     const building = await this.buildingRepository.findOne({ where: { id: buildingId } });
     if (!building) {
@@ -73,11 +73,11 @@ export class BuildingService {
     buildingFacilities.facilities = facilities;
 
     if (facilities.isSecure) {
-      buildingFacilities.lastInspection = lastInspection;
-    } 
-    
-    if (lastInspection === null) {
+      buildingFacilities.lastInspection = new Date();
+    } else if (buildingFacilities.lastInspection === null) {
       buildingFacilities.lastInspection = building.construction_date;
+    } else {
+      buildingFacilities.lastInspection = null;
     }
 
     await this.buildingFacilitiesRepository.save(buildingFacilities);

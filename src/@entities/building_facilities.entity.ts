@@ -7,7 +7,7 @@ export class BuildingFacilities {
     @PrimaryGeneratedColumn()
     buildingFacilitiesId: number
 
-    @Column()
+    @Column({ nullable: true })
     lastInspection: Date
 
     @ManyToOne(() => Building, (building) => building.buildingFacilities)

@@ -29,11 +29,10 @@ import { BuildingFacilities } from './@entities/building_facilities.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'Developpement2003!',
-      database: 'buildingGestion',
+      host: 'mysql-nest.alwaysdata.net',
+      username: 'nest',
+      password: 'Response2111!',
+      database: 'nest_buildinggestion',
       entities: [Building, Apartment, Apartment_type, Owner, Tenant, Option, Facilities, BuildingFacilities],
       synchronize: true,
     }),
