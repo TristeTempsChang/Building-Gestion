@@ -23,6 +23,19 @@ export class ApartmentController {
       return this.apartmentService.findApartment();
   }
 
+  @Get(':apartmentId/getApartmentById')
+  @ApiOkResponse({ description: 'Display apartment by id' })
+  @ApiBadRequestResponse({ description: 'Apartment not found' })
+  async getOwnerById(@Param('apartmentId') apartmentId: number): Promise<any> {
+    try {
+      const res = await this.apartmentService.findApartmentById(apartmentId);
+      return res
+    } catch (error) {
+      console.error(error);
+      throw new BadRequestException({ message: 'Error fetching apartment data' });
+    }
+  }
+
   //For create apartment
   @Post('createApartment')
   @ApiCreatedResponse({
@@ -97,5 +110,18 @@ export class ApartmentController {
             console.error(error);
             throw new BadRequestException({ message: 'Error removing tenants' });
         }
+    }
+
+    @Delete(':apartmentId/deleteApartment')
+    @ApiOkResponse({ description: 'Apartment successfully deleted' })
+    @ApiBadRequestResponse({ description: 'Error deleting apartment' })
+    async deleteApartment(@Param('apartmentId', ParseIntPipe) apartmentId: number) {
+      try {
+        await this.apartmentService.deleteApartment(apartmentId);
+        return { message: "Apartment successfully deleted" };
+      } catch (error) {
+        console.error(error);
+        throw new BadRequestException({ message: 'Error deleting apartment' });
+      }
     }
 }

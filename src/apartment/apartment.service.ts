@@ -23,6 +23,13 @@ export class ApartmentService {
     return this.apartmentRepository.find({ relations: ['owner', 'type', 'options', 'tenant'] });
   }
 
+  async findApartmentById(id: number){
+    return this.apartmentRepository.findOne({ 
+      where: { id: id },
+      relations: ['owner', 'type', 'options', 'tenant']
+    });
+  }
+
   // For @Post Create
   async createApartment(apartmentDetails: CreateApartmentParams) {
     if (!apartmentDetails.typeId) {
@@ -120,5 +127,14 @@ export class ApartmentService {
     );
     
     return update
+  }
+
+  async deleteApartment(apartmentId: number) {
+    const apartment = await this.apartmentRepository.findOne({ where: { id: apartmentId }});
+    if (!apartment) {
+      throw new NotFoundException('Apartment not found');
+    }
+
+    await this.apartmentRepository.remove(apartment);
   }
 }

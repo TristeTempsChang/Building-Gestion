@@ -13,6 +13,12 @@ export class TypeService {
     return this.typeRepository.find();
   }
 
+  async findTypeById(id: number){
+    return this.typeRepository.findOne({ 
+      where: { id: id }
+    });
+  }
+
   async createType(typeDetails: CreateTypeParams) {
 
     const newType = this.typeRepository.create({

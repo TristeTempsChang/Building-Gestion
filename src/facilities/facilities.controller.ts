@@ -18,6 +18,19 @@ export class FacilitiesController {
         return this.facilitiesService.findFacilities();
     }
 
+    @Get(':facilitiesId/getFacilitiesById')
+    @ApiOkResponse({ description: 'Display facilities by id' })
+    @ApiBadRequestResponse({ description: 'Facilities not found' })
+    async getFacilitiesById(@Param('facilitiesId') facilitiesId: number): Promise<any> {
+        try {
+            const res = await this.facilitiesService.findFacilitiesById(facilitiesId);
+            return res
+        } catch (error) {
+            console.error(error);
+            throw new BadRequestException({ message: 'Error fetching facilities data' });
+        }
+    }
+
     //For create facilities
     @Post('createFacilities')
     @ApiCreatedResponse({

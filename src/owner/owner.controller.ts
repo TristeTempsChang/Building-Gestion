@@ -21,6 +21,19 @@ export class OwnerController {
       return this.ownerService.findOwners();
   }
 
+  @Get(':ownerId/getOwnerById')
+  @ApiOkResponse({ description: 'Display owner by id' })
+  @ApiBadRequestResponse({ description: 'Owner not found' })
+  async getOwnerById(@Param('ownerId') ownerId: number): Promise<any> {
+    try {
+      const res = await this.ownerService.findOwnerById(ownerId);
+      return res
+    } catch (error) {
+      console.error(error);
+      throw new BadRequestException({ message: 'Error fetching owner data' });
+    }
+  }
+
   //For create options
   @Post('createOwner')
   @ApiCreatedResponse({

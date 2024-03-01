@@ -18,6 +18,19 @@ export class TenantController {
       return this.tenantService.findTenant();
   }
 
+  @Get(':tenantId/getTenantById')
+  @ApiOkResponse({ description: 'Display tenant by id' })
+  @ApiBadRequestResponse({ description: 'Tenant not found' })
+  async getTenantById(@Param('tenantId') tenantId: number): Promise<any> {
+    try {
+      const res = await this.tenantService.findTenantById(tenantId);
+      return res
+    } catch (error) {
+      console.error(error);
+      throw new BadRequestException({ message: 'Error fetching tenant data' });
+    }
+  }
+
   //For create tenant
   @Post('createTenant')
   @ApiCreatedResponse({

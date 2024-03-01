@@ -13,6 +13,12 @@ export class OptionService {
     return this.optionRepository.find();
   }
 
+  async findOptionById(id: number){
+    return this.optionRepository.findOne({ 
+      where: { id: id }
+    });
+  }
+
   async createOptions(optionDetails: CreateOptionParams) {
 
     const newOption = this.optionRepository.create({

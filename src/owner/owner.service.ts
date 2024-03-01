@@ -18,6 +18,13 @@ export class OwnerService {
     return this.ownerRepository.find({relations: ['apartments']});
   }
 
+  async findOwnerById(id: number){
+    return this.ownerRepository.findOne({ 
+      where: { id: id },
+      relations: ['apartments']
+    });
+  }
+
   async createOwner(ownerDetails: CreateOwnerParams) {
 
     const newOwner = this.ownerRepository.create({

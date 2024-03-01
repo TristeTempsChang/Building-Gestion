@@ -13,6 +13,13 @@ export class TenantService {
     return this.tenantRepository.find({relations: ['apartment']});
   }
 
+  async findTenantById(id: number){
+    return this.tenantRepository.findOne({ 
+      where: { id: id },
+      relations: ['apartment']
+    });
+  }
+
   // For @Post Create
   async createTenant(tenantDetails: CreateOptionParams) {
 

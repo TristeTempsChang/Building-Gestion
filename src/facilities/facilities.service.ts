@@ -13,6 +13,12 @@ export class FacilitiesService {
     return this.facilitiesRepository.find();
   }
 
+  async findFacilitiesById(id: number){
+    return this.facilitiesRepository.findOne({ 
+      where: { id: id }
+    });
+  }
+
   // For @Post create
   async createFacilities(facilitiesDetails: CreateFacilitiesParams) {
 

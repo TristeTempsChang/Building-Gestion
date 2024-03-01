@@ -18,6 +18,19 @@ export class TypeController {
       return this.typeService.findType();
   }
 
+  @Get(':typeId/getTypeById')
+  @ApiOkResponse({ description: 'Display type by id' })
+  @ApiBadRequestResponse({ description: 'Type not found' })
+  async getTypeById(@Param('typeId') typeId: number): Promise<any> {
+    try {
+      const res = await this.typeService.findTypeById(typeId);
+      return res
+    } catch (error) {
+      console.error(error);
+      throw new BadRequestException({ message: 'Error fetching type data' });
+    }
+  }
+
   //For create type
   @Post('createTypes')
   @ApiCreatedResponse({
