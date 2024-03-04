@@ -1,5 +1,5 @@
 import { BadRequestException, Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { OptionService } from './option.service';
 import { Option } from 'src/@entities/option.entity';
 import { CreateOptionDto } from './dtos/CreateOption.dto';
@@ -12,6 +12,7 @@ export class OptionController {
 
     //For getting a list of all options
     @Get('getOptions')
+    @ApiOperation({summary: "Get all options"})
     @ApiOkResponse({ description: 'Display all options of the app' })
     @ApiBadRequestResponse({ description: 'Options not found' })
     getOptions() {
@@ -19,6 +20,7 @@ export class OptionController {
     }
 
     @Get(':optionId/getOptionById')
+    @ApiOperation({summary: "Get one option"})
     @ApiOkResponse({ description: 'Display option by id' })
     @ApiBadRequestResponse({ description: 'Option not found' })
     async getOptionById(@Param('optionId') optionId: number): Promise<any> {
@@ -33,11 +35,19 @@ export class OptionController {
 
     //For create options
     @Post('createOptions')
+    @ApiOperation({summary: "Create an option"})
     @ApiCreatedResponse({
         description: 'Option successfully created',
         type: Option
     })
-    @ApiBadRequestResponse({ description: 'Error creating options' })
+    @ApiBadRequestResponse({ 
+        description: 'Error creating option...',
+        schema: {
+          example: {
+            message: 'Error creating option...'
+          }
+        }
+      })
     async createOptions(@Body() createOptionDto: CreateOptionDto) {
         try {
             await this.optionService.createOptions(createOptionDto);
@@ -49,7 +59,23 @@ export class OptionController {
     }
 
     @Put(':id/updateOptions')
-    @ApiBadRequestResponse({ description: 'Error updating type' })
+    @ApiOperation({summary: "Update an option"})
+    @ApiCreatedResponse({
+        description: 'Option successfully updated',
+        schema: {
+          example: {
+            message: 'Option successfully updated'
+          }
+        }
+      })
+      @ApiBadRequestResponse({ 
+        description: 'Error updating option',
+        schema: {
+          example: {
+            message: 'Error updating option'
+          }
+        }
+      })
     async updateTypeById(
         @Param('id', ParseIntPipe) id: number,
         @Body() updateOptionDto: CreateOptionDto
@@ -63,8 +89,23 @@ export class OptionController {
     }
 
     @Delete(':id/deleteOptions')
-    @ApiOkResponse({ description: 'Option successfully deleted' })
-    @ApiBadRequestResponse({ description: 'Error deleting tenant' })
+    @ApiOperation({summary: "Delete an option"})
+    @ApiCreatedResponse({
+        description: 'Option successfully deleted',
+        schema: {
+          example: {
+            message: 'Option successfully deleted'
+          }
+        }
+      })
+      @ApiBadRequestResponse({ 
+        description: 'Error deleting option',
+        schema: {
+          example: {
+            message: 'Error deleting option'
+          }
+        }
+      })
     async deleteTenantById(@Param('id', ParseIntPipe) id: number) {
         try {
             await this.optionService.deleteOption(id);

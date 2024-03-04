@@ -8,7 +8,7 @@ export class Building {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ApiProperty({ example: "Building address"})
+    @ApiProperty({ example: "10 street Mickeal jackson"})
     @Column()
     address: string;
 

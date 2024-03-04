@@ -1,5 +1,5 @@
 import { BadRequestException, Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { OwnerService } from './owner.service';
 import { CreateOwnerDto } from './dtos/CreateOwner.dto';
 import { Owner } from 'src/@entities/owner.entity';
@@ -15,6 +15,7 @@ export class OwnerController {
 
   //For getting a list of all owners
   @Get('getOwner')
+  @ApiOperation({summary: "Get all owners"})
   @ApiOkResponse({description: 'Display all owners of the app'})
   @ApiBadRequestResponse({ description: 'Owners not found' })
   getOwners(){
@@ -22,6 +23,7 @@ export class OwnerController {
   }
 
   @Get(':ownerId/getOwnerById')
+  @ApiOperation({summary: "Get one owner"})
   @ApiOkResponse({ description: 'Display owner by id' })
   @ApiBadRequestResponse({ description: 'Owner not found' })
   async getOwnerById(@Param('ownerId') ownerId: number): Promise<any> {
@@ -36,11 +38,19 @@ export class OwnerController {
 
   //For create options
   @Post('createOwner')
+  @ApiOperation({summary: "Create a Owner"})
   @ApiCreatedResponse({
       description: 'Owner successfully created',
       type: Owner
   })
-  @ApiBadRequestResponse({ description: 'Error creating owner' })
+  @ApiBadRequestResponse({ 
+    description: 'Error creating owner',
+    schema: {
+      example: {
+        message: 'Error creating owner'
+      }
+    }
+  })
   async createOwner(@Body() createOwnerDto: CreateOwnerDto){
       try {
         await this.ownerService.createOwner(createOwnerDto);
@@ -51,8 +61,24 @@ export class OwnerController {
       }
   }
 
-  @ApiBadRequestResponse({ description: 'Error associating apartment' })
     @Post(':ownerId/assignApartment')
+    @ApiOperation({summary: "Assign an apartment to a owner"})
+    @ApiCreatedResponse({
+      description: 'Apartment successfully add to owner apartment list',
+      schema: {
+        example: {
+          message: 'Apartment successfully add to owner apartment list'
+        }
+      }
+    })
+    @ApiBadRequestResponse({
+      description: 'Error associating apartment',
+      schema: {
+        example: {
+          message: 'Error associating apartment'
+        }
+      }
+    })
     async assignApartment(@Body() assignApartmentDto: AssignApartmentDto, @Param('ownerId') ownerId: number) {
         try {
             await this.ownerService.assignApartment(ownerId, assignApartmentDto);
@@ -64,11 +90,19 @@ export class OwnerController {
     }
 
   @Delete(':ownerId/removeApartment')
+  @ApiOperation({summary: "Remove an apartment to a owner"})
   @ApiOkResponse({ 
     description: 'Apartments successfully removed from the owner',
     type: DeleteApartmentsExample 
   })
-  @ApiBadRequestResponse({ description: 'Error removing apartment' })
+  @ApiBadRequestResponse({
+    description: 'Error removing Apartment',
+    schema: {
+      example: {
+        message: 'Error removing Apartment'
+      }
+    }
+  })
   async removeTenantFromApartment(@Body() deleteApartmentDto: DeleteApartmentDto, @Param('ownerId') ownerId: number) {
       try {
           const { apartmentsIds } = deleteApartmentDto;
@@ -81,7 +115,23 @@ export class OwnerController {
   }
 
   @Put(':id/updateOwner')
-  @ApiBadRequestResponse({ description: 'Error updating owner' })
+  @ApiOperation({summary: "Update a owner"})
+  @ApiCreatedResponse({
+    description: 'Owner successfully updated',
+    schema: {
+      example: {
+        message: 'Owner successfully updated'
+      }
+    }
+  })
+  @ApiBadRequestResponse({
+    description: 'Error updating owner',
+    schema: {
+      example: {
+        message: 'Error updating owner'
+      }
+    }
+  })
   async updateTenantById(
       @Param('id', ParseIntPipe) id: number,
       @Body() updateOwnerDto: CreateOwnerDto
@@ -95,8 +145,23 @@ export class OwnerController {
   }
 
   @Delete(':id/deleteOwner')
-  @ApiOkResponse({ description: 'Owner successfully deleted' })
-  @ApiBadRequestResponse({ description: 'Error deleting owner' })
+  @ApiOperation({summary: "Delete a owner"})
+  @ApiCreatedResponse({
+    description: 'Owner successfully deleted',
+    schema: {
+      example: {
+        message: 'Owner successfully deleted'
+      }
+    }
+  })
+  @ApiBadRequestResponse({
+    description: 'Error deleting owner',
+    schema: {
+      example: {
+        message: 'Error deleting owner'
+      }
+    }
+  })
   async deleteOwnerById(@Param('id', ParseIntPipe) id: number) {
     try {
       await this.ownerService.deleteOwner(id);

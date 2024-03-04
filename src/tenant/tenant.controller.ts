@@ -1,6 +1,6 @@
 import { BadRequestException, Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { TenantService } from './tenant.service';
-import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Tenant } from 'src/@entities/tenant.entity';
 import { CreateOptionDto } from 'src/option/dtos/CreateOption.dto';
 
@@ -12,6 +12,7 @@ export class TenantController {
 
   //For getting a list of all types
   @Get('getTenants')
+  @ApiOperation({summary: "Get all tenants"})
   @ApiOkResponse({description: 'Display all tenants of the app'})
   @ApiBadRequestResponse({ description: 'Tenant not found' })
   getTenant(){
@@ -19,6 +20,7 @@ export class TenantController {
   }
 
   @Get(':tenantId/getTenantById')
+  @ApiOperation({summary: "Get a tenant"})
   @ApiOkResponse({ description: 'Display tenant by id' })
   @ApiBadRequestResponse({ description: 'Tenant not found' })
   async getTenantById(@Param('tenantId') tenantId: number): Promise<any> {
@@ -33,23 +35,47 @@ export class TenantController {
 
   //For create tenant
   @Post('createTenant')
+  @ApiOperation({summary: "Create a tenant"})
   @ApiCreatedResponse({
       description: 'Tenant successfully created',
       type: Tenant
   })
-  @ApiBadRequestResponse({ description: 'Error creating tenant' })
+  @ApiBadRequestResponse({ 
+    description: 'Error creating tenant',
+    schema: {
+      example: {
+        message: 'Error creating tenant'
+      }
+    }
+  })
   async createTenant(@Body() createTenantDto: CreateOptionDto){
       try {
         await this.tenantService.createTenant(createTenantDto);
         return { message: "Tenant successfully created" };
       } catch (error) {
           console.error(error);
-          throw new BadRequestException({ message: 'Error creating building' });
+          throw new BadRequestException({ message: 'Error creating tenant' });
       }
   }
 
   @Put(':id/updateTenant')
-  @ApiBadRequestResponse({ description: 'Error updating tenant' })
+  @ApiOperation({summary: "update a tenant"})
+  @ApiCreatedResponse({
+    description: 'Tenant successfully updated',
+    schema: {
+      example: {
+        message: 'Tenant successfully updated'
+      }
+    }
+  })
+  @ApiBadRequestResponse({
+    description: 'Error updating tenant',
+    schema: {
+      example: {
+        message: 'Error updating tenant'
+      }
+    }
+  })
   async updateTenantById(
       @Param('id', ParseIntPipe) id: number,
       @Body() updateTenantDto: CreateOptionDto
@@ -63,8 +89,23 @@ export class TenantController {
   }
 
   @Delete(':id/deleteTenant')
-  @ApiOkResponse({ description: 'Tenant successfully deleted' })
-  @ApiBadRequestResponse({ description: 'Error deleting tenant' })
+  @ApiOperation({summary: "delete a tenant"})
+  @ApiCreatedResponse({
+    description: 'Tenant successfully deleted',
+    schema: {
+      example: {
+        message: 'Tenant successfully deleted'
+      }
+    }
+  })
+  @ApiBadRequestResponse({
+    description: 'Error deleting tenant',
+    schema: {
+      example: {
+        message: 'Error deleting tenant'
+      }
+    }
+  })
   async deleteTenantById(@Param('id', ParseIntPipe) id: number) {
     try {
       await this.tenantService.deleteTenant(id);

@@ -1,5 +1,5 @@
 import { BadRequestException, Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Res } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BuildingService } from './building.service';
 import { Building } from 'src/@entities/building.entity';
 import { CreateBuildingDto } from './dtos/CreateBuilding.dto';
@@ -14,6 +14,7 @@ export class BuildingController {
 
   //For getting a list of all buildings
   @Get('getBuilding')
+  @ApiOperation({summary: "Get all building"})
   @ApiOkResponse({ description: 'Display all buildings of the app' })
   @ApiBadRequestResponse({ description: 'Buildings not found' })
   getBuildings() {
@@ -22,11 +23,19 @@ export class BuildingController {
 
   //For create building
   @Post('createBuilding')
+  @ApiOperation({summary: "Create a building"})
   @ApiCreatedResponse({
     description: 'Building successfully created',
     type: Building
   })
-  @ApiBadRequestResponse({ description: 'Error creating user' })
+  @ApiBadRequestResponse({ 
+    description: 'Error creating building',
+    schema: {
+      example: {
+        message: 'Error creating building'
+      }
+    }
+  })
   async createBuilding(@Body() createBuildingDto: CreateBuildingDto) {
     try {
       await this.buildingService.createBuilding(createBuildingDto);
@@ -37,8 +46,20 @@ export class BuildingController {
     }
   }
 
-  @ApiBadRequestResponse({ description: 'Error associating apartment' })
   @Post(':buildingId/assignApartment')
+  @ApiOperation({summary: "Assign an apartment to a building"})
+  @ApiCreatedResponse({
+    description: 'Apartment successfully associated with building',
+    type: AssignApartmentDto
+  })
+  @ApiBadRequestResponse({ 
+    description: 'Error associating apartment',
+    schema: {
+      example: {
+        message: 'Error associating apartment'
+      }
+    }
+  })
   async assignApartment(@Body() assignApartmentDto: AssignApartmentDto, @Param('buildingId') buildingId: number) {
     try {
       await this.buildingService.assignApartment(buildingId, assignApartmentDto);
@@ -50,17 +71,31 @@ export class BuildingController {
   }
 
   @Post(':buildingId/assign-facilities')
+  @ApiOperation({summary: "Assign facilities to a building"})
+  @ApiCreatedResponse({
+    description: 'Facilities successfully associated with building',
+    type: AssignFacilitiesDto
+  })
+  @ApiBadRequestResponse({ 
+    description: 'Error associating facilities',
+    schema: {
+      example: {
+        message: 'Error associating facilities'
+      }
+    }
+  })
   async assignFacilities(@Param('buildingId') buildingId: number, @Body() assignFacilitiesDto: AssignFacilitiesDto) {
     try {
       await this.buildingService.assignFacilities(buildingId, assignFacilitiesDto);
       return { message: "facility successfully associated with building" };
     } catch (error) {
       console.error(error);
-      throw new BadRequestException({ message: 'Error associating apartment' });
+      throw new BadRequestException({ message: 'Error associating facilities' });
     }
   }
 
   @Get(':buildingId/getBuildingById')
+  @ApiOperation({summary: "Get one building with all associate statistics"})
   @ApiOkResponse({ description: 'Display building statistics' })
   @ApiBadRequestResponse({ description: 'Building not found' })
   async getBuildingById(@Param('buildingId') buildingId: number): Promise<any> {
@@ -74,7 +109,23 @@ export class BuildingController {
   }
 
   @Put(':id/updateBuilding')
-  @ApiBadRequestResponse({ description: 'Error updating building' })
+  @ApiOperation({summary: "update a building"})
+    @ApiCreatedResponse({
+        description: 'Building successfully updated',
+        schema: {
+          example: {
+            message: 'Building successfully updated'
+          }
+        }
+      })
+      @ApiBadRequestResponse({ 
+        description: 'Error updating building',
+        schema: {
+          example: {
+            message: 'Error updating building'
+          }
+        }
+      })
   async updateBuilding(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateBuildingrDto: CreateBuildingDto
@@ -88,8 +139,23 @@ export class BuildingController {
   }
 
   @Delete(':buildingId/deleteBuilding')
-  @ApiOkResponse({ description: 'Building successfully deleted' })
-  @ApiBadRequestResponse({ description: 'Building not found' })
+  @ApiOperation({summary: "update a building"})
+    @ApiCreatedResponse({
+        description: 'Building successfully deleted',
+        schema: {
+          example: {
+            message: 'Building successfully deleted'
+          }
+        }
+      })
+      @ApiBadRequestResponse({ 
+        description: 'Error deleting building',
+        schema: {
+          example: {
+            message: 'Error deleting building'
+          }
+        }
+      })
   async deleteBuilding(@Param('buildingId') buildingId: number) {
     try {
       await this.buildingService.deleteBuilding(buildingId)

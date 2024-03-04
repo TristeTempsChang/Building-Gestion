@@ -1,5 +1,5 @@
 import { BadRequestException, Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FacilitiesService } from './facilities.service';
 import { Facilities } from 'src/@entities/facilities.entity';
 import { CreateFacilitiesDto } from './dtos/CreateFacilities.dto';
@@ -12,6 +12,7 @@ export class FacilitiesController {
 
     //For getting a list of all facilities
     @Get('getFacilities')
+    @ApiOperation({summary: "Get all facilities"})
     @ApiOkResponse({description: 'Display all facilities of the app'})
     @ApiBadRequestResponse({ description: 'Facilities not found' })
     getFacilities(){
@@ -19,6 +20,7 @@ export class FacilitiesController {
     }
 
     @Get(':facilitiesId/getFacilitiesById')
+    @ApiOperation({summary: "Get one facility"})
     @ApiOkResponse({ description: 'Display facilities by id' })
     @ApiBadRequestResponse({ description: 'Facilities not found' })
     async getFacilitiesById(@Param('facilitiesId') facilitiesId: number): Promise<any> {
@@ -33,11 +35,19 @@ export class FacilitiesController {
 
     //For create facilities
     @Post('createFacilities')
+    @ApiOperation({summary: "Create a facility"})
     @ApiCreatedResponse({
         description: 'Facilities successfully created',
         type: Facilities
     })
-    @ApiBadRequestResponse({ description: 'Error creating facilities' })
+    @ApiBadRequestResponse({ 
+        description: 'Error creating Facilities',
+        schema: {
+          example: {
+            message: 'Error creating Facilities'
+          }
+        }
+      })
     async createFacilities(@Body() createFacilitiesDto: CreateFacilitiesDto){
         try {
           await this.facilitiesService.createFacilities(createFacilitiesDto);
@@ -49,7 +59,23 @@ export class FacilitiesController {
     }
 
     @Put(':id/updateFacilities')
-    @ApiBadRequestResponse({ description: 'Error updating owner' })
+    @ApiOperation({summary: "update a facility"})
+    @ApiCreatedResponse({
+        description: 'Facilities successfully updated',
+        schema: {
+          example: {
+            message: 'Facilities successfully updated'
+          }
+        }
+      })
+      @ApiBadRequestResponse({ 
+        description: 'Error updating Facilities',
+        schema: {
+          example: {
+            message: 'Error updating Facilities'
+          }
+        }
+      })
     async updateTenantById(
         @Param('id', ParseIntPipe) id: number,
         @Body() updateFacilitiesDto: CreateFacilitiesDto
@@ -63,8 +89,23 @@ export class FacilitiesController {
     }
 
     @Delete(':id/deleteFacilities')
-    @ApiOkResponse({ description: 'Facilities successfully deleted' })
-    @ApiBadRequestResponse({ description: 'Error deleting facilities' })
+    @ApiOperation({summary: "Delete a facility"})
+    @ApiCreatedResponse({
+        description: 'Facilities successfully deleted',
+        schema: {
+          example: {
+            message: 'Facilities successfully deleted'
+          }
+        }
+      })
+      @ApiBadRequestResponse({ 
+        description: 'Error deleting Facilities',
+        schema: {
+          example: {
+            message: 'Error deleting Facilities'
+          }
+        }
+      })
     async deleteTenantById(@Param('id', ParseIntPipe) id: number) {
         try {
         await this.facilitiesService.deleteFacilities(id);
