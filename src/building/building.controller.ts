@@ -161,6 +161,7 @@ export class BuildingController {
       await this.buildingService.deleteBuilding(buildingId)
       return { message: 'Building successfully deleted' }
     } catch (error) {
+      console.log(error)
       throw new BadRequestException({ message: 'Error deleting building' });
     }
   }

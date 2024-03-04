@@ -10,7 +10,7 @@ export class BuildingFacilities {
     @Column({ nullable: true })
     lastInspection: Date
 
-    @ManyToOne(() => Building, (building) => building.buildingFacilities)
+    @ManyToOne(() => Building, (building) => building.buildingFacilities, { onDelete: 'SET NULL' })
     building: Building
 
     @ManyToOne(() => Facilities, (facilities) => facilities.buildingFacilities, { onDelete: 'SET NULL' })
