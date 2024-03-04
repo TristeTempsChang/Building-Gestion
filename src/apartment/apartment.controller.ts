@@ -169,7 +169,7 @@ export class ApartmentController {
   }
 
   @Delete(':apartmentId/deleteApartment')
-  @ApiOperation({ summary: "update an apartment" })
+  @ApiOperation({ summary: "Delete an apartment" })
   @ApiCreatedResponse({
     description: 'Apartment successfully deleted',
     schema: {

@@ -139,7 +139,7 @@ export class BuildingController {
   }
 
   @Delete(':buildingId/deleteBuilding')
-  @ApiOperation({summary: "update a building"})
+  @ApiOperation({summary: "Delete a building"})
     @ApiCreatedResponse({
         description: 'Building successfully deleted',
         schema: {
